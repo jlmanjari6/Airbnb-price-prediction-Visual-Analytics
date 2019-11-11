@@ -1,0 +1,41 @@
+h1 {
+    text-align:center;
+    color: rebeccapurple;
+    font-size: medium;
+}
+
+#accordionDiv {
+    max-width: 800px;
+    margin: auto;
+}
+
+h2 {
+    max-width: 300px;
+    margin: auto;
+}
+
+ul {
+  width:1500px;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #428bca;
+}
+
+li {
+  float: left;
+}
+
+li a {
+  color: white;
+  display: block;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+
+}
+
+.active {
+  background-color: #4CAF50;
+}

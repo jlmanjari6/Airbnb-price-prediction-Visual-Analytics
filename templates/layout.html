@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    <meta charset="UTF-8">
+    <title>Airbnb Price Prediction</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href=../static/styles/styles.css>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+    <script src="../static/app.js"></script>
+</head>
+<body>
+<header>{% block head %}{% endblock %}</header>
+
+<h1 class="card-header" style="font-family: Verdana;font-size: 30px;font-weight: bold;color: steelblue"> AIRBNB PRICE PREDICTION </h1>
+<div id="MenuBar" style="margin-top: 30px;margin-left: 30px;margin-right: 30px" class="list-group list-group-horizontal">
+    <ul>
+        <li><a class="active" href="/">Dashboard</a></li>
+        <li><a href="/Trends">Trends</a></li>
+        <li><a href="#contact">Clustering</a></li>
+        <li><a href="#about">Radviz</a></li>
+    </ul>
+</div>
+
+{% block body %}
+{% endblock %}
+</body>
+</html>
