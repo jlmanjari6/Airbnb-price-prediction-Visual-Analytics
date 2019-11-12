@@ -4,44 +4,14 @@
 {% block body %}
 
     <div id="leftMenuDiv" class="jumbotron"
-     style="float: left;width: 20%;margin-left: 20px;margin-right:10px;margin-top:20px;font-weight: bold;background-color: lightsteelblue">
-    <form action="/PredictPrice" method="post">
+         style="float: left;width: 20%;margin-left: 20px;margin-right:10px;margin-top:20px;font-weight: bold;background-color: lightsteelblue">
+        <h1> Welcome to Airbnb Price Prediction application! </h1>
 
-        <div class="form-group">
-            <label for="exampleFormControlSelect1">Select province:</label>
-            <select name="provinceID" class="form-control" id="provinceID" onchange="onProvinceChange()">
-                <option>New Brunswick</option>
-                <option>Victoria, British Columbia</option>
-            </select>
-        </div>
 
-        <div class="form-group">
-            <label for="exampleFormControlSelect1">Select neighborhood group:</label>
-            <select name="neighbourhood_groups" method="GET" action="/" class="form-control" id="neighbourhood_groupsID"
-                    onchange="onGroupChange()">
-                {% for neighbourhood_group in neighbourhood_groups %}
-                    <option value="{{ neighbourhood_group }} Selected">{{ neighbourhood_group }}</option>
-                {% endfor %}
-            </select>
-        </div>
+    </div>
 
-        <div class="form-group">
-            <label for="exampleFormControlSelect1">Select neighborhood:</label>
-            <select name="neighborhoods" class="form-control" id="neighborhoodID" onchange="onNeighborhoodChange()">>
-                {% for neighborhood in neighborhoods %}
-                    <option value="{{ neighborhood }} Selected">{{ neighborhood }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <button style="margin-left: 50px;margin-top: 20px;background-color: #428bca;color: white;font-weight: bold;padding: 10px 30px;"
-                type="submit" class="btn">Predict price
-        </button>
-    </form>
-
-</div>
-
-    <div id=""mainContainer>
-    <iframe style="margin-top:20px;" width=1200 height=600 src="{{ url_for('show_map') }}"></iframe>
+    <div id="mainContainer">
+        <iframe style="margin-top:20px;" width=1200 height=600 src="{{ url_for('show_map') }}"></iframe>
     </div>
 
 {% endblock %}

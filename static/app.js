@@ -13,3 +13,4 @@ function onGroupChange() {
 function onNeighborhoodChange() {
     selected_neighborhood = document.getElementById("neighborhoodID").value;
 }
+
