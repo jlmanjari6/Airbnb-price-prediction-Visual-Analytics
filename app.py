@@ -134,14 +134,15 @@ def render_airbnbs():
     # filtering room type
     r_df = n_df[(n_df.room_type == roomtypes[0])]
 
-    generate_marker_latlong(r_df)
-    return render_template('find-airbnbs.html', provinces=provinces, neighborhoods=neighborhoods, roomtypes = roomtypes)
+    response_map = generate_marker_latlong(r_df)
+    return render_template('find-airbnbs.html', provinces=provinces, neighborhoods=neighborhoods, roomtypes = roomtypes
+                           , response_map=response_map)
 
 
 def generate_marker_latlong(r_df):
     latitudes_list = list(r_df.latitude)
     longitudes_list = list(r_df.longitude)
-    map2 = folium.Map(location=[latitudes_list[0], longitudes_list[0]])
+    map2 = folium.Map(location=[latitudes_list[0], longitudes_list[0]] , zoom_start='12', width='100%',height='75%')
     for index, row in r_df.iterrows():
         tooltip = 'Click here to know more!'
         pop_string = "<b>Name: </b>" + row['name'] + "<br><br>" + "<b>Minimum nights: </b>" + str(
@@ -150,7 +151,7 @@ def generate_marker_latlong(r_df):
             row['bedrooms']) + "<br><br>" + "<b>Bathrooms: </b>" + str(
             row['bathrooms']) + "<br><br>" + "<b>Amenities: </b>" + row['amenities']
         folium.Marker([row['latitude'], row['longitude']], popup=pop_string, tooltip=tooltip).add_to(map2)
-    map2.save(outfile="./static/find-airbnbs-map2.html")
+    return map2
 
 
 @app.route('/GenerateMarkers', methods=['GET', 'POST'])
@@ -174,8 +175,9 @@ def generate_markers():
     # filtering room type
     r_df = n_df[(n_df.room_type == selected_roomtype)]
 
-    generate_marker_latlong(r_df)
-    return render_template('find-airbnbs.html', provinces=provinces, neighborhoods=neighborhoods, roomtypes = roomtypes)
+    response_map = generate_marker_latlong(r_df)
+    return render_template('find-airbnbs.html', provinces=provinces, neighborhoods=neighborhoods, roomtypes = roomtypes
+                           , response_map=response_map)
 
 
 @app.route('/get_neighbourhood/<provinceID>')

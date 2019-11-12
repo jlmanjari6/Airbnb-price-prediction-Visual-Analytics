@@ -8,7 +8,6 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/find-airbnbs.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/find-airbnbs.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/index.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -147,7 +146,7 @@
       <workItem from="1572967678389" duration="29990000" />
       <workItem from="1573413446363" duration="12563000" />
       <workItem from="1573430646952" duration="28418000" />
-      <workItem from="1573517870600" duration="4415000" />
+      <workItem from="1573517870600" duration="8378000" />
     </task>
     <servers />
   </component>
