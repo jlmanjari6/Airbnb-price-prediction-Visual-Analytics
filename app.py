@@ -7,7 +7,6 @@ import pandas as pd
 import plotly
 import plotly.graph_objs as go
 from flask import Flask, render_template, request, jsonify
-from flask import send_file
 from folium.plugins import FastMarkerCluster
 
 app = Flask(__name__)
@@ -59,13 +58,8 @@ def render_home():
     locations = list(zip(lats2019, lons2019))
     map1 = folium.Map(location=[55.585901, -105.750596], zoom_start=3)
     FastMarkerCluster(data=locations).add_to(map1)
-    map1.save(outfile="./templates/dashboard-map2.html")
+    map1.save(outfile="./static/dashboard-map2.html")
     return render_template('index.html', neighbourhood_groups=neighbourhood_groups, neighborhoods=neighborhoods)
-
-
-@app.route('/templates/dashboard-map2.html')
-def show_map():
-    return send_file(os.path.join('./templates/', "dashboard-map2.html"))
 
 
 # ****************************************************** Trends page ***************************************************
@@ -156,12 +150,7 @@ def generate_marker_latlong(r_df):
             row['bedrooms']) + "<br><br>" + "<b>Bathrooms: </b>" + str(
             row['bathrooms']) + "<br><br>" + "<b>Amenities: </b>" + row['amenities']
         folium.Marker([row['latitude'], row['longitude']], popup=pop_string, tooltip=tooltip).add_to(map2)
-    map2.save(outfile="./templates/find-airbnbs-map2.html")
-
-
-@app.route('/templates/find-airbnbs-map2.html')
-def show_airbnbs_map():
-    return send_file(os.path.join('./templates/', "find-airbnbs-map2.html"))
+    map2.save(outfile="./static/find-airbnbs-map2.html")
 
 
 @app.route('/GenerateMarkers', methods=['GET', 'POST'])
