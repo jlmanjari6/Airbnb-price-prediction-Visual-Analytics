@@ -16,6 +16,11 @@ if __name__ == '__main__':
     app.run(debug=True)
 
 
+class MainClass:
+    def __init__(self):
+        self.preprocessed_df = get_preprocessed_df()
+
+
 def get_preprocessed_df():
     df_nb = pd.read_csv("NewBrunswick.csv")
     df_nb['province'] = "New Brunswick"
@@ -46,13 +51,14 @@ def get_preprocessed_df():
     return df
 
 
+main_class_obj = MainClass()
 # **************************************************** Dashboard page **************************************************
 @app.route('/', methods=['GET'])
 def render_home():
     neighbourhood_groups = []
     neighborhoods = []
 
-    df = get_preprocessed_df()
+    df = main_class_obj.preprocessed_df
     lats2019 = df['latitude'].tolist()
     lons2019 = df['longitude'].tolist()
     locations = list(zip(lats2019, lons2019))
@@ -66,8 +72,7 @@ def render_home():
 @app.route('/Trends', methods=['GET'])
 def render_trends():
     provinces = []
-    neighborhoods = []
-    df = get_preprocessed_df()
+    df = main_class_obj.preprocessed_df
     # fill drop downs for default option "New Brunswick"
     provinces = df.province.unique()
     x = "bedrooms"
@@ -78,11 +83,10 @@ def render_trends():
 
 
 def get_plot(df, dfg, x, y):
-    y_values = list(getattr(df, y).unique())  # y
-    x_values = list(getattr(df, x).unique())  # x
+    y_values = list(getattr(df, y).unique())
+    x_values = list(getattr(df, x).unique())
     dataa = []
     for val in y_values:
-        # item = ""
         df_temp = dfg[(getattr(dfg, y)) == val]
         ls = []
         for r in x_values:
@@ -105,7 +109,7 @@ def generate_plot():
     selected_province = request.form.get('provinceID')
     x = request.form.get('xParams')
     y = request.form.get('yParams')
-    df = get_preprocessed_df()
+    df = main_class_obj.preprocessed_df
     provinces = df.province.unique()
     dfg = df[df.province == selected_province]
     plot_generated = get_plot(df, dfg, x, y)
@@ -119,7 +123,7 @@ def generate_plot():
 def render_airbnbs():
     provinces = []
     neighborhoods = []
-    df = get_preprocessed_df()
+    df = main_class_obj.preprocessed_df
     # fill drop downs for default option "New Brunswick"
     provinces = df.province.unique()
 
@@ -156,7 +160,18 @@ def generate_marker_latlong(r_df):
 
 @app.route('/GenerateMarkers', methods=['GET', 'POST'])
 def generate_markers():
-    df = get_preprocessed_df()
+    output = get_filtered_df()
+    r_df = output[0]
+    provinces = output[1]
+    neighborhoods = output[2]
+    roomtypes = output[3]
+    response_map = generate_marker_latlong(r_df)
+    return render_template('find-airbnbs.html', provinces=provinces, neighborhoods=neighborhoods, roomtypes = roomtypes
+                           , response_map=response_map)
+
+
+def get_filtered_df():
+    df = main_class_obj.preprocessed_df
 
     selected_province = request.form.get('provinceID')
     selected_neighbourhood = request.form.get('neighbourhoods')
@@ -174,16 +189,12 @@ def generate_markers():
 
     # filtering room type
     r_df = n_df[(n_df.room_type == selected_roomtype)]
-
-    response_map = generate_marker_latlong(r_df)
-    return render_template('find-airbnbs.html', provinces=provinces, neighborhoods=neighborhoods, roomtypes = roomtypes
-                           , response_map=response_map)
+    return r_df, provinces, neighborhoods, roomtypes
 
 
 @app.route('/get_neighbourhood/<provinceID>')
 def get_neighbourhood(provinceID):
-    print("enter")
-    df = get_preprocessed_df()
+    df = main_class_obj.preprocessed_df
     p_df = df.loc[df.province == provinceID]
     neighborhoods = list(p_df.neighbourhood.unique())
     return jsonify(neighborhoods)
@@ -191,8 +202,7 @@ def get_neighbourhood(provinceID):
 
 @app.route('/get_roomtypes/<neighbourhoodID>')
 def get_roomtypes(neighbourhoodID):
-    print("enter")
-    df = get_preprocessed_df()
+    df = main_class_obj.preprocessed_df
     p_df = df.loc[df.neighbourhood == neighbourhoodID]
     roomtypes = list(p_df.room_type.unique())
     return jsonify(roomtypes)
@@ -203,8 +213,13 @@ def get_roomtypes(neighbourhoodID):
 
 @app.route('/PricePrediction', methods=['GET'])
 def render_price_prediction():
-
-    return render_template('predict-price.html')
+    df = main_class_obj.preprocessed_df
+    provinces = df.province.unique()
+    accommodates = sorted(df.accommodates.unique())
+    bedrooms = sorted(df.bedrooms.unique())
+    minimum_nights = sorted(df.minimum_nights.unique())
+    return render_template('predict-price.html', provinces=provinces, accommodates=accommodates, bedrooms=bedrooms,
+                           minimum_nights=minimum_nights)
 
 
 

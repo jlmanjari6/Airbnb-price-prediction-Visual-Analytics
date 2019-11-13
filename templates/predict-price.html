@@ -2,8 +2,26 @@
 {% block title %} {{ super() }} {% endblock %}
 {% block head %}
     {{ super() }}
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+     <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous">
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+    <script>
+        function validateForm(){
+            let selectedProvince = $("#provinceID").val();
+            let selectedNeighbourhood = $("#neighbourhoodID").val();
+            let roomtype = $("#roomtypeID").val();
+            let accommodates = $("#accommodateID").val();
+            let bedrooms = $("#bedroomsID").val();
+            let minimumNights = $("#minimumID").val();
+
+            if(selectedProvince == 'p0' || selectedNeighbourhood == 'n0' || roomtype == 'r0' || accommodates == 'a0') {
+                alert("Please select all the required fields!")
+                return false;
+            }
+        }
+    </script>
 {% endblock %}
 {% block body %}
     <div class="accordion" id="accordionExample">
@@ -27,16 +45,16 @@
                             </ol>
                             <div style="alignment: center" class="carousel-inner">
                                 <div class="carousel-item active">
-                                     <h4 align="center">Correlation matrix</h4>
-{#                                        <p>Explanation</p>#}
+                                    <h4 align="center">Correlation matrix</h4>
+                                    {#                                        <p>Explanation</p>#}
                                     <div>
                                         <img src="../static/Capture.PNG" class="d-block w-100" alt="...">
                                     </div>
                                 </div>
                                 <div class="carousel-item">
-                                     <h4 align="center">Residual plot for XGBoost Regressor</h4>
+                                    <h4 align="center">Residual plot for XGBoost Regressor</h4>
                                     <div>
-                                       <img src="../static/residual-plot.png" class="d-block w-100" alt="...">
+                                        <img src="../static/residual-plot.png" class="d-block w-100" alt="...">
                                     </div>
                                 </div>
                                 <div class="carousel-item">
@@ -63,12 +81,122 @@
         </div>
     </div>
 
-{#    <div id="leftMenuDiv" class="jumbotron"#}
-{#         style="float: left;width: 20%;margin-left: 20px;margin-right:10px;margin-top:20px;font-weight: bold;background-color: lightsteelblue">#}
-{##}
-{#    </div>#}
+    <div id="leftMenuDiv" class="jumbotron"
+         style="float: left;width: 22%;margin-left: 20px;margin-right:10px;margin-top:20px;font-weight: bold;background-color: lightsteelblue">
+        <label style="color: red">* fields are mandatory</label><br>
+        <label>            </label>
+        <form id="formID" action="/PredictPrice" onsubmit="return validateForm()" method="post">
+            <div class="form-group">
+                <label for="validationServer05">Select province: <span style="color: red">*</span></label>
+                <select name="provinceID" class="form-control" id="provinceID">
+                    <option value="p0">--Select--</option>
+                    {% for province in provinces %}
+                        <option value="{{ province }}">{{ province }}</option>
+                    {% endfor %}
+                </select>
+                <div class="invalid-feedback">
+                    Please provide a valid province!
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="validationServer05">Select neighbourhood: <span style="color: red">*</span></label>
+                <select name="neighbourhoodID" class="form-control" id="neighbourhoodID">
+                    <option value="n0">--Select--</option>
+                    {% for neighbourhood in neighbourhoods %}
+                        <option value="{{ neighbourhood }}">{{ neighbourhood }}</option>
+                    {% endfor %}
+                </select>
+                <div class="invalid-feedback">
+                    Please provide a valid neighbourhood!
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="validationServer05">Select room type: <span style="color: red">*</span></label>
+                <select name="roomtypeID" class="form-control" id="roomtypeID">
+                    <option value="r0">--Select--</option>
+                    <option value="Entire home/apt">Entire home/apt</option>
+                    <option value="Shared room">Shared room</option>
+                    <option value="Private room">Private room</option>
+                    <option value="Hotel room">Hotel room</option>
+                </select>
+                <div class="invalid-feedback">
+                    Please provide a valid room type!
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="validationServer05">Select accommodates: <span style="color: red">*</span></label>
+                <select name="accommodateID" class="form-control" id="accommodateID">
+                    <option value="a0">--Select--</option>
+                    {% for val in accommodates %}
+                        <option value="{{ val }}">{{ val }}</option>
+                    {% endfor %}
+                </select>
+                <div class="invalid-feedback">
+                    Please provide a valid value!
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="exampleFormControlSelect1">Select number of bedrooms: (Optional) </label>
+                <select name="bedroomsID" class="form-control" id="bedroomsID">
+                    <option value="b0">--Select--</option>
+                    {% for val in bedrooms %}
+                        <option value="{{ val }}">{{ val }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="exampleFormControlSelect1">Select minimum no. of nights: (Optional) </label>
+                <select name="minimumID" class="form-control" id="minimumID">
+                    <option value="m0">--Select--</option>
+                    {% for val in minimum_nights %}
+                        <option value="{{ val }}">{{ val }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+
+            <button style="margin-left: 50px;margin-top: 20px;background-color: #428bca;color: white;font-weight: bold;padding: 10px 30px;"
+                    type="submit" class="btn">Predict price
+            </button>
+        </form>
+
+    </div>
 
     <div id="mainContainer" style="margin-left: 400px">
 
     </div>
+
+     <script>
+        $(document).ready(function() {
+            {# change province #}
+            $('#provinceID').change(function() {
+                console.log("hi");
+                let provinceID = $('#provinceID').val();
+                $.ajax({
+                    type: "GET",
+                    url: '/get_neighbourhood' + '/' + provinceID,
+                    datatype: "json",
+                    async: false,
+                    success: function(data){
+                        // Remove old options
+                        $('#neighbourhoodID').find('option').remove();
+
+                        // Add new items
+                        let option_item = "<option value=" + "n0" + ">--Select--</option>"
+                        $('#neighbourhoodID').append(option_item);
+                        $.each(data, function(key, val) {
+                            option_item = '<option value="' + val + '">' + val + '</option>'
+                            $('#neighbourhoodID').append(option_item);
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+
 {% endblock %}`
