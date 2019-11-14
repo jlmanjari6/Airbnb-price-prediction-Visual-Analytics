@@ -15,7 +15,7 @@
                 <label for="exampleFormControlSelect1">Select province:</label>
                 <select name="provinceID" class="form-control" id="provinceID">
                     {% for province in provinces %}
-                        <option value="{{ province }}">{{ province }}</option>
+                        <option value="{{ province }}" {% if sel_province == province %} selected {% endif %} >{{ province }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -23,20 +23,20 @@
             <div class="form-group">
                 <label for="exampleFormControlSelect1">Select X-axis:</label>
                 <select name="xParams" class="form-control" id="xID">>
-                    <option>bedrooms</option>
-                    <option>room_type</option>
-                    <option>neighbourhood</option>
-                    <option>availability_30</option>
+                    <option value="bedrooms" {% if sel_x == "bedrooms" %} selected {% endif %} >bedrooms</option>
+                    <option value="room_type" {% if sel_x == "room_type" %} selected {% endif %}>room_type</option>
+                    <option value="neighbourhood" {% if sel_x == "neighbourhood" %} selected {% endif %}>neighbourhood</option>
+                    <option value="availability_30" {% if sel_x == "availability_30" %} selected {% endif %}>availability_30</option>
                 </select>
             </div>
 
             <div class="form-group">
                 <label for="exampleFormControlSelect1">Select Y-axis:</label>
                 <select name="yParams" class="form-control" id="yID">
-                    <option>room_type</option>
-                    <option>neighbourhood</option>
-                    <option>availability_30</option>
-                    <option>bedrooms</option>
+                    <option value="room_type" {% if sel_y == "room_type" %} selected {% endif %}>room_type</option>
+                    <option value="bedrooms" {% if sel_y == "bedrooms" %} selected {% endif %}>bedrooms</option>
+                    <option value="neighbourhood" {% if sel_y == "neighbourhood" %} selected {% endif %}>neighbourhood</option>
+                    <option value="availability_30" {% if sel_y == "availability_30" %} selected {% endif %}>availability_30</option>
                 </select>
             </div>
 

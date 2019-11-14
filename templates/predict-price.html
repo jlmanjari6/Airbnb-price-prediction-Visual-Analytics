@@ -2,10 +2,11 @@
 {% block title %} {{ super() }} {% endblock %}
 {% block head %}
     {{ super() }}
-     <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
             integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
             crossorigin="anonymous">
     </script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
     <script>
         function validateForm(){
@@ -45,20 +46,20 @@
                             </ol>
                             <div style="alignment: center" class="carousel-inner">
                                 <div class="carousel-item active">
-                                    <h4 align="center">Correlation matrix</h4>
+                                    <h4 align="center" style="color:white">Correlation matrix</h4>
                                     {#                                        <p>Explanation</p>#}
                                     <div>
                                         <img src="../static/Capture.PNG" class="d-block w-100" alt="...">
                                     </div>
                                 </div>
                                 <div class="carousel-item">
-                                    <h4 align="center">Residual plot for XGBoost Regressor</h4>
+                                    <h4 align="center" style="color:white">Residual plot for XGBoost Regressor</h4>
                                     <div>
                                         <img src="../static/residual-plot.png" class="d-block w-100" alt="...">
                                     </div>
                                 </div>
                                 <div class="carousel-item">
-                                    <h4 align="center">Feature Importance for XGBoost Regressor</h4>
+                                    <h4 align="center" style="color:white">Feature Importance for XGBoost Regressor</h4>
                                     <div>
                                         <img src="../static/feature-selection.png" class="d-block w-100" alt="...">
                                     </div>
@@ -91,12 +92,9 @@
                 <select name="provinceID" class="form-control" id="provinceID">
                     <option value="p0">--Select--</option>
                     {% for province in provinces %}
-                        <option value="{{ province }}">{{ province }}</option>
+                        <option value="{{ province }}" {% if sel_province == province %} selected {% endif %} >{{ province }}</option>
                     {% endfor %}
                 </select>
-                <div class="invalid-feedback">
-                    Please provide a valid province!
-                </div>
             </div>
 
             <div class="form-group">
@@ -104,26 +102,19 @@
                 <select name="neighbourhoodID" class="form-control" id="neighbourhoodID">
                     <option value="n0">--Select--</option>
                     {% for neighbourhood in neighbourhoods %}
-                        <option value="{{ neighbourhood }}">{{ neighbourhood }}</option>
+                        <option value="{{ neighbourhood }}" {% if neighbourhood == sel_neighbourhood %} selected {% endif %}>{{ neighbourhood }}</option>
                     {% endfor %}
                 </select>
-                <div class="invalid-feedback">
-                    Please provide a valid neighbourhood!
-                </div>
             </div>
 
             <div class="form-group">
                 <label for="validationServer05">Select room type: <span style="color: red">*</span></label>
                 <select name="roomtypeID" class="form-control" id="roomtypeID">
                     <option value="r0">--Select--</option>
-                    <option value="Entire home/apt">Entire home/apt</option>
-                    <option value="Shared room">Shared room</option>
-                    <option value="Private room">Private room</option>
-                    <option value="Hotel room">Hotel room</option>
+                    {% for roomtype in roomtypes %}
+                        <option value="{{ roomtype }}" {% if roomtype == sel_roomtype %} selected {% endif %}>{{ roomtype }}</option>
+                    {% endfor %}
                 </select>
-                <div class="invalid-feedback">
-                    Please provide a valid room type!
-                </div>
             </div>
 
             <div class="form-group">
@@ -131,20 +122,17 @@
                 <select name="accommodateID" class="form-control" id="accommodateID">
                     <option value="a0">--Select--</option>
                     {% for val in accommodates %}
-                        <option value="{{ val }}">{{ val }}</option>
+                        <option value="{{ val }}" {% if sel_accommodates == val %} selected {% endif %}>{{ val }}</option>
                     {% endfor %}
                 </select>
-                <div class="invalid-feedback">
-                    Please provide a valid value!
-                </div>
             </div>
 
             <div class="form-group">
                 <label for="exampleFormControlSelect1">Select number of bedrooms: (Optional) </label>
                 <select name="bedroomsID" class="form-control" id="bedroomsID">
-                    <option value="b0">--Select--</option>
+                    <option value="b0" {% if sel_bedrooms == 'b0' %} selected {% endif %}>--Select--</option>
                     {% for val in bedrooms %}
-                        <option value="{{ val }}">{{ val }}</option>
+                        <option value="{{ val }}" {% if sel_bedrooms == val %} selected {% endif %}>{{ val }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -152,31 +140,38 @@
             <div class="form-group">
                 <label for="exampleFormControlSelect1">Select minimum no. of nights: (Optional) </label>
                 <select name="minimumID" class="form-control" id="minimumID">
-                    <option value="m0">--Select--</option>
+                    <option value="m0" {% if sel_min == 'm0' %} selected {% endif %}>--Select--</option>
                     {% for val in minimum_nights %}
-                        <option value="{{ val }}">{{ val }}</option>
+                        <option value="{{ val }}" {% if sel_min == val %} selected {% endif %}>{{ val }}</option>
                     {% endfor %}
                 </select>
             </div>
 
 
-            <button style="margin-left: 50px;margin-top: 20px;background-color: #428bca;color: white;font-weight: bold;padding: 10px 30px;"
+            <button style="margin-left: 50px;margin-top: 20px;background-color: chocolate;color: white;font-weight: bold;padding: 10px 30px;"
                     type="submit" class="btn">Predict price
             </button>
         </form>
 
     </div>
 
-    <div id="mainContainer" style="margin-left: 400px">
+    <p align="center" style="margin-top: 30px;font-family: Calibri;color: #C01A4A;font-weight: bold;
+    font-size: 20px" {% if price == '' %} hidden {% endif %}> The predicted price for desired Airbnb is: ${{ price }}</p>
+
+    <div id="mainContainer" style="margin-left: 400px;margin-top: 50px">
 
     </div>
 
-     <script>
+    <script>
+        let first_neighbourhood = ''
         $(document).ready(function() {
-            {# change province #}
+
+        });
+
+         {# change province #}
             $('#provinceID').change(function() {
-                console.log("hi");
-                let provinceID = $('#provinceID').val();
+                var provinceID = $('#provinceID').val();
+
                 $.ajax({
                     type: "GET",
                     url: '/get_neighbourhood' + '/' + provinceID,
@@ -187,16 +182,55 @@
                         $('#neighbourhoodID').find('option').remove();
 
                         // Add new items
-                        let option_item = "<option value=" + "n0" + ">--Select--</option>"
-                        $('#neighbourhoodID').append(option_item);
                         $.each(data, function(key, val) {
-                            option_item = '<option value="' + val + '">' + val + '</option>'
+                            var option_item = '<option value="' + val + '">' + val + '</option>'
                             $('#neighbourhoodID').append(option_item);
                         });
+                        first_neighbourhood = data[Object.keys(data)[0]];
                     }
                 });
+                $.getJSON(
+                    '/get_roomtypes' + '/' + first_neighbourhood,
+                    function(data) {
+
+                        // Remove old options
+                        $('#roomtypeID').find('option').remove();
+
+                        // Add new items
+                        $.each(data, function(key, val) {
+                            var option_item = '<option value="' + val + '">' + val + '</option>'
+                            $('#roomtypeID').append(option_item);
+                        });
+                    }
+                );
             });
-        });
+
+            {# change neighbourhood #}
+            $('#neighbourhoodID').change(function() {
+                var neighbourhoodID = $('#neighbourhoodID').val();
+
+                // Make Ajax Request and expect JSON-encoded data
+                $.getJSON(
+                    '/get_roomtypes' + '/' + neighbourhoodID,
+                    function(data) {
+
+                        // Remove old options
+                        $('#roomtypeID').find('option').remove();
+
+                        // Add new items
+                        $.each(data, function(key, val) {
+                            var option_item = '<option value="' + val + '">' + val + '</option>'
+                            $('#roomtypeID').append(option_item);
+                        });
+                    }
+                );
+            });
+
+        plot = '{{ plot }}';
+        if(plot != 'NA') {
+            let graphs = {{plot | safe}};
+            Plotly.plot('mainContainer', graphs, {});
+        }
     </script>
 
 {% endblock %}`
