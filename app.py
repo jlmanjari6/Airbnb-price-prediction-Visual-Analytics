@@ -1,17 +1,27 @@
+import base64
+import io
 import json
 
 import folium
-import numpy as np
 import pandas as pd
 import plotly
 import plotly.graph_objs as go
+import requests
+import xgboost as xgb
 from flask import Flask, render_template, request, jsonify
 from folium.plugins import FastMarkerCluster
+from geopy.distance import great_circle
 from sklearn import preprocessing
-import xgboost as xgb
-
+from sklearn.cluster import KMeans
+from sklearn.model_selection import train_test_split
+from yellowbrick.regressor import ResidualsPlot
 
 app = Flask(__name__)
+
+df_entire = pd.read_csv('listings.csv')
+oneHotColumns = ['neighbourhood', 'room_type']
+requiredColummns = oneHotColumns + ['name', 'latitude', 'longitude', 'price']
+jsonData = []
 
 
 if __name__ == '__main__':
@@ -278,6 +288,20 @@ def predict_price():
         sel_min = int(selected_min_nights)
 
     xgb_reg = xgb.XGBRegressor(max_depth=5, min_child_weight=24)
+
+    # to generate residual plot
+    img = io.BytesIO()
+    X_train, X_test, y_train, y_test = train_test_split(ndf[tdf.columns], ndf.price, test_size=0.3, random_state=10)
+    xgb_reg.fit(X_train, y_train)
+    visualizer = ResidualsPlot(xgb_reg)
+    visualizer.fit(X_train, y_train)  # Fit the training data to the visualizer
+    visualizer.score(X_test, y_test)
+    residuals_plot = visualizer.show()
+    fig = residuals_plot.get_figure()
+    fig.savefig(img, format='png')
+    img.seek(0)
+    residual_plot = 'data:image/png;base64,{}'.format(base64.b64encode(img.getvalue()).decode())
+
     xgb_reg.fit(ndf[tdf.columns], ndf.price)
     tdf['price'] = xgb_reg.predict(tdf)
     output = tdf.loc[(tdf.neighbourhood == selected_neighbourhood) & (tdf.room_type == selected_roomtype), 'price'].iloc[0]
@@ -310,7 +334,8 @@ def predict_price():
                            recommended_neighbourhoods=recommended_neighbourhoods, plot_generated_neigh=plot_generated_neigh,
                            plot_generated_room=plot_generated_room, sel_province=request.form.get('provinceID'),
                            sel_neighbourhood=sel_neighbourhood, sel_roomtype=sel_roomtype,sel_min=sel_min,
-                           sel_bedrooms=sel_bedrooms, sel_accommodates=int(request.form.get('accommodateID')))
+                           sel_bedrooms=sel_bedrooms, sel_accommodates=int(request.form.get('accommodateID')),
+                           residual_plot=residual_plot)
 
 
 def get_price_plots(recommended, plot_type):
@@ -339,5 +364,90 @@ def get_price_plots(recommended, plot_type):
     graph_json = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     return graph_json
 
+
+@app.route('/Clustering', methods=['GET'])
+def render_clustering():
+    return render_template('clustering.html')
+
+
+# calculate the distance of given airbnb from point of interest location
+def calcDistance(lat, lon, pointOfInterest):
+    airbnb = (lat, lon)
+    return great_circle(pointOfInterest, airbnb).km
+
+
+# does one hot encoding using pandas get_dummies
+def oneHotEncoding(dataFrame):
+    ohe_df = dataFrame
+    for column in oneHotColumns:
+        temp_df = pd.get_dummies(ohe_df[column], prefix=column)
+        ohe_df = ohe_df.drop(column, axis=1)
+        ohe_df = pd.concat([ohe_df, temp_df], axis=1)
+    return ohe_df
+
+
+# construct distance matrix api url
+def constructDistanceMatrixUrl(dataFrame, latitude, longitude):
+    url = 'https://maps.googleapis.com/maps/api/distancematrix/json?'
+    url += 'units=imperial'
+    origin = ''
+    for (index, row) in dataFrame.iterrows():
+        if origin != '':
+            origin += '|'
+        origin += str(row['latitude']) + ',' + str(row['longitude'])
+    url += '&origins=' + origin
+    url += '&destinations=' + str(latitude) + ',' + str(longitude)
+    url += '&key=AIzaSyCYnhazJCeczhD1PM0yt5mJc39093i5-5Q'
+    return url
+
+
+def clusterData(latitude, longitude, pointOfInterest):
+    timeList = []
+    distanceList = []
+    df = df_entire[requiredColummns]
+    df['distance'] = df_entire.apply(lambda x: calcDistance(x.latitude, x.longitude, pointOfInterest), axis=1)
+    df_sort = df.sort_values(by='distance', ascending=True).head(50)
+
+    X = oneHotEncoding(df_sort[oneHotColumns])
+    url = constructDistanceMatrixUrl(df_sort, latitude, longitude)
+    response = requests.get(url)
+    json_data = json.loads(response.text)
+    for row in json_data['rows']:
+        elements = row['elements']
+        distanceList.append(elements[0]['distance']['value']/1000)
+        timeList.append(elements[0]['duration']['value'])
+
+    X['timeTaken'] = timeList
+    X['distance'] = distanceList
+    kmeans = KMeans(n_clusters=10, random_state=0).fit(X)
+    pred = kmeans.predict(X)
+    X['clusterId'] = pred
+
+    df_cluster = pd.DataFrame(columns=['name','latitude','longitude','cluster','distance','timeTaken','price','roomType'])
+    df_cluster['name'] = df_sort['name']
+    df_cluster['latitude'] = df_sort['latitude']
+    df_cluster['longitude'] = df_sort['longitude']
+    df_cluster['roomType'] = df_sort['room_type']
+    df_cluster['cluster'] = X['clusterId']
+    df_cluster['distance'] = X['distance']
+    df_cluster['timeTaken'] = X['timeTaken']
+    df_cluster['price'] = df_sort['price']
+    jsonData = df_cluster.to_json(orient='records')
+    return jsonData
+
+
+@app.route('/getData')
+def get_data():
+    latitude = request.args.get('lat')
+    longitude = request.args.get('lng')
+    latitude = float(latitude)
+    longitude = float(longitude)
+    pointOfInterest = (latitude, longitude)
+    outputData = clusterData(latitude, longitude, pointOfInterest)
+    with open('json.json', 'w') as f:
+        f.write(outputData)
+    # with open('json.json', 'r') as content_file:
+    #     outputData = content_file.read()
+    return outputData
 
 

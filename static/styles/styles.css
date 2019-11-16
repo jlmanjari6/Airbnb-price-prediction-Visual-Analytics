@@ -39,3 +39,31 @@ li a {
 .active {
   background-color: chocolate;
 }
+
+#mapid {
+	height: 500px;
+	width: 100%;
+}
+
+#autocomplete {
+	width: 400px;
+    padding: 5px;
+    border-radius: 5px;
+    outline: none;
+    border: 1px solid grey;
+}
+
+#autocomplete:active {
+	transition: 0.2s;
+	border: 1px solid blue !important;
+}
+
+.map-wrapper {
+    width: 95%;
+    margin-left: 30px;
+    padding-top: 25px;
+}
+
+.map-wrapper input {
+    margin-bottom: 25px;
+}
