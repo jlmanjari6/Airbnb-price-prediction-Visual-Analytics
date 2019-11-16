@@ -197,7 +197,7 @@ def render_price_prediction():
     bedrooms = sorted(ndf.bedrooms.unique())
     minimum_nights = sorted(ndf.minimum_nights.unique())
     return render_template('predict-price.html', provinces=provinces, accommodates=accommodates, bedrooms=bedrooms,
-                           minimum_nights=minimum_nights, plot='NA',price='')
+                           minimum_nights=minimum_nights, plot_generated_neigh='NA',plot_generated_room='NA', price='')
 
 
 @app.route('/PredictPrice', methods=['GET', 'POST'])
@@ -255,6 +255,12 @@ def predict_price():
                 'accommodates': [int(selected_accommodates)]}
         tdf = tdf.append(pd.DataFrame(data), ignore_index=True)
 
+    for val in roomtypes:
+        if val != sel_roomtype:
+            data = {'neighbourhood': [selected_neighbourhood], 'province': [selected_province],
+                    'room_type': [le_room_type_mapping[val]], 'accommodates': [int(selected_accommodates)]}
+            tdf = tdf.append(pd.DataFrame(data), ignore_index=True)
+
     sel_min = ''
     sel_bedrooms = ''
     if selected_bedrooms != 'b0' and selected_min_nights != 'm0':
@@ -271,10 +277,12 @@ def predict_price():
         tdf['minimum_nights'] = int(selected_min_nights)
         sel_min = int(selected_min_nights)
 
-    xgb_reg = xgb.XGBRegressor(max_depth= 5, min_child_weight=24)
+    xgb_reg = xgb.XGBRegressor(max_depth=5, min_child_weight=24)
     xgb_reg.fit(ndf[tdf.columns], ndf.price)
     tdf['price'] = xgb_reg.predict(tdf)
-    output = tdf.loc[tdf.neighbourhood == selected_neighbourhood, 'price'].iloc[0]
+    output = tdf.loc[(tdf.neighbourhood == selected_neighbourhood) & (tdf.room_type == selected_roomtype), 'price'].iloc[0]
+
+    # to plot other neighbourhoods with similar price range
     ls1 = (tdf[tdf.price <= output]).nlargest(5, "price")
     ls2 = (tdf[tdf.price > output]).nsmallest(5, "price")
     ls = ls1.append(ls2)
@@ -284,30 +292,50 @@ def predict_price():
             if value == int(row[1].neighbourhood):
                 recommended_neighbourhoods[key] = round(row[1].price, 2)
 
-    plot_generated = get_price_plots(recommended_neighbourhoods)
+    plot_generated_neigh = get_price_plots(recommended_neighbourhoods, "Neighbourhood")
+
+    # to plot for other room types
+    recommended_roomtypes = {}
+    ls = tdf.loc[(tdf.neighbourhood == selected_neighbourhood) & (tdf.room_type != selected_roomtype)]
+    for row in ls.iterrows():
+        for key,value in le_room_type_mapping.items():
+            if value == int(row[1].room_type):
+                recommended_roomtypes[key] = round(row[1].price, 2)
+
+    plot_generated_room = get_price_plots(recommended_roomtypes, "Room type")
+
     return render_template('predict-price.html', provinces=provinces, neighbourhoods=neighborhoods,
                            roomtypes=roomtypes, accommodates=accommodates, bedrooms=bedrooms,
                            minimum_nights=minimum_nights, price=round(output,2),
-                           recommended_neighbourhoods=recommended_neighbourhoods, plot=plot_generated,
-                           sel_province=request.form.get('provinceID'),
+                           recommended_neighbourhoods=recommended_neighbourhoods, plot_generated_neigh=plot_generated_neigh,
+                           plot_generated_room=plot_generated_room, sel_province=request.form.get('provinceID'),
                            sel_neighbourhood=sel_neighbourhood, sel_roomtype=sel_roomtype,sel_min=sel_min,
                            sel_bedrooms=sel_bedrooms, sel_accommodates=int(request.form.get('accommodateID')))
 
 
-def get_price_plots(recommended_neighbourhoods):
-    x = list(recommended_neighbourhoods.keys())
-    y = list(recommended_neighbourhoods.values())
+def get_price_plots(recommended, plot_type):
+    x = list(recommended.keys())
+    y = list(recommended.values())
+
     fig = go.Figure(data=[go.Bar(
-            x=x, y=y,
-            width=0.7,
-            text=y,
-            textposition='auto',
+        x=x, y=y,
+        width=0.7,
+        text=y,
+        textposition='auto',
     )])
-    fig.update_traces(marker_color='#C01A4A', marker_line_color='rgb(8,48,107)',
-                      marker_line_width=0.3, opacity=0.8)
-    fig.update_layout(title="Other neighbourhoods of similar price range:", width=1100, height=600,
-                      xaxis_title="Neighbourhood",
-                      yaxis_title="Price")
+
+    if plot_type == 'Neighbourhood':
+        fig.update_traces(marker_color='blue', marker_line_color='rgb(8,48,107)',
+                          marker_line_width=0.3, opacity=0.8)
+        fig.update_layout(title="Other neighbourhoods of similar price range:", width=1000, height=700,
+                          xaxis_title=plot_type, yaxis_title="Price")
+
+    if plot_type == "Room type":
+        fig.update_traces(marker_color='green', marker_line_color='rgb(8,48,107)',
+                          marker_line_width=0.3, opacity=0.8)
+        fig.update_layout(title="If you want to go for any other room type:", width=600, height=700,
+                          xaxis_title=plot_type, yaxis_title="Price")
+
     graph_json = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     return graph_json
 

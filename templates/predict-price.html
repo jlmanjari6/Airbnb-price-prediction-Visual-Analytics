@@ -155,10 +155,24 @@
 
     </div>
 
-    <p align="center" style="margin-top: 30px;font-family: Calibri;color: #C01A4A;font-weight: bold;
-    font-size: 20px" {% if price == '' %} hidden {% endif %}> The predicted price for desired Airbnb is: ${{ price }}</p>
+    <div style="margin-left: 700px;margin-top: 40px">
+        <p style="font-family: 'Open Sans, verdana'; font-size: 17px; fill: rgb(42, 63, 95); opacity: 1; font-weight: normal; white-space: pre
+        ;color: darkblue;font-weight: bolder;
+            font-size: 27px" {% if price == '' %} hidden {% endif %}> The predicted price for desired Airbnb is: </p>
+    </div>
+
+    <div style="margin-left: 850px">
+        <img style="float:left;height: 60px;width:60px;" src="../static/logo2.png" alt="logo2">
+
+        <p style="font-family: 'Open Sans, verdana';float:bottom;margin-left:70px;color: red;font-weight: bolder;
+            font-size: 40px" {% if price == '' %} hidden {% endif %}> ${{ price }}</p>
+    </div>
 
     <div id="mainContainer" style="margin-left: 400px;margin-top: 50px">
+
+    </div>
+
+    <div id="plotRoomTypeContainer" style="margin-top:700px;margin-left: 600px;margin-top: 50px">
 
     </div>
 
@@ -168,69 +182,74 @@
 
         });
 
-         {# change province #}
-            $('#provinceID').change(function() {
-                var provinceID = $('#provinceID').val();
+        {# change province #}
+        $('#provinceID').change(function() {
+            var provinceID = $('#provinceID').val();
 
-                $.ajax({
-                    type: "GET",
-                    url: '/get_neighbourhood' + '/' + provinceID,
-                    datatype: "json",
-                    async: false,
-                    success: function(data){
-                        // Remove old options
-                        $('#neighbourhoodID').find('option').remove();
+            $.ajax({
+                type: "GET",
+                url: '/get_neighbourhood' + '/' + provinceID,
+                datatype: "json",
+                async: false,
+                success: function(data){
+                    // Remove old options
+                    $('#neighbourhoodID').find('option').remove();
 
-                        // Add new items
-                        $.each(data, function(key, val) {
-                            var option_item = '<option value="' + val + '">' + val + '</option>'
-                            $('#neighbourhoodID').append(option_item);
-                        });
-                        first_neighbourhood = data[Object.keys(data)[0]];
-                    }
-                });
-                $.getJSON(
-                    '/get_roomtypes' + '/' + first_neighbourhood,
-                    function(data) {
-
-                        // Remove old options
-                        $('#roomtypeID').find('option').remove();
-
-                        // Add new items
-                        $.each(data, function(key, val) {
-                            var option_item = '<option value="' + val + '">' + val + '</option>'
-                            $('#roomtypeID').append(option_item);
-                        });
-                    }
-                );
+                    // Add new items
+                    $.each(data, function(key, val) {
+                        var option_item = '<option value="' + val + '">' + val + '</option>'
+                        $('#neighbourhoodID').append(option_item);
+                    });
+                    first_neighbourhood = data[Object.keys(data)[0]];
+                }
             });
+            $.getJSON(
+                '/get_roomtypes' + '/' + first_neighbourhood,
+                function(data) {
 
-            {# change neighbourhood #}
-            $('#neighbourhoodID').change(function() {
-                var neighbourhoodID = $('#neighbourhoodID').val();
+                    // Remove old options
+                    $('#roomtypeID').find('option').remove();
 
-                // Make Ajax Request and expect JSON-encoded data
-                $.getJSON(
-                    '/get_roomtypes' + '/' + neighbourhoodID,
-                    function(data) {
+                    // Add new items
+                    $.each(data, function(key, val) {
+                        var option_item = '<option value="' + val + '">' + val + '</option>'
+                        $('#roomtypeID').append(option_item);
+                    });
+                }
+            );
+        });
 
-                        // Remove old options
-                        $('#roomtypeID').find('option').remove();
+        {# change neighbourhood #}
+        $('#neighbourhoodID').change(function() {
+            var neighbourhoodID = $('#neighbourhoodID').val();
 
-                        // Add new items
-                        $.each(data, function(key, val) {
-                            var option_item = '<option value="' + val + '">' + val + '</option>'
-                            $('#roomtypeID').append(option_item);
-                        });
-                    }
-                );
-            });
+            // Make Ajax Request and expect JSON-encoded data
+            $.getJSON(
+                '/get_roomtypes' + '/' + neighbourhoodID,
+                function(data) {
 
-        plot = '{{ plot }}';
+                    // Remove old options
+                    $('#roomtypeID').find('option').remove();
+
+                    // Add new items
+                    $.each(data, function(key, val) {
+                        var option_item = '<option value="' + val + '">' + val + '</option>'
+                        $('#roomtypeID').append(option_item);
+                    });
+                }
+            );
+        });
+
+        plot = '{{ plot_generated_neigh }}';
         if(plot != 'NA') {
-            let graphs = {{plot | safe}};
+            let graphs = {{plot_generated_neigh | safe}};
             Plotly.plot('mainContainer', graphs, {});
         }
-    </script>
 
+        plot = '{{ plot_generated_room }}';
+        if(plot != 'NA') {
+            let graphs = {{plot_generated_room | safe}};
+            Plotly.plot('plotRoomTypeContainer', graphs, {});
+        }
+    </script>
 {% endblock %}`
