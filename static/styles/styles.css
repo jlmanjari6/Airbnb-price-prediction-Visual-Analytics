@@ -42,7 +42,20 @@ li a {
 
 #mapid {
 	height: 500px;
-	width: 100%;
+	width: 80%;
+    display: inline-block;
+}
+
+.similar-airbnb {
+    display: inline-block;
+    overflow-y: auto;
+    vertical-align: top;
+    width: 18%;
+    /* text-align: center; */
+    border: 1px solid grey;
+    height: 500px;
+    border-radius: 5px;
+    padding: 5px;
 }
 
 #autocomplete {

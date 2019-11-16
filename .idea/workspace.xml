@@ -6,11 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="57f98e09-2c3e-4286-aa40-b95d9517566f" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/residual-plot.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/json.json" beforeDir="false" afterPath="$PROJECT_DIR$/json.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/static/styles/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/styles/styles.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/layout.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/layout.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/predict-price.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/predict-price.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/clustering.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/clustering.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -149,7 +148,7 @@
       <workItem from="1572967678389" duration="29990000" />
       <workItem from="1573413446363" duration="12563000" />
       <workItem from="1573430646952" duration="28418000" />
-      <workItem from="1573517870600" duration="90850000" />
+      <workItem from="1573517870600" duration="95047000" />
     </task>
     <servers />
   </component>

@@ -110,7 +110,6 @@ var createPlaceOfInterest = function(placeObj){
                 // pop up
                 var infowindow = new google.maps.InfoWindow({
                   content: popContent(data)
-                  // content: data.cluster + ' ' + data.distance + ' ' + data.timeTaken
                 });
                 prevInfoWindow = infowindow;
                 infowindow.open(map, marker);
@@ -118,10 +117,35 @@ var createPlaceOfInterest = function(placeObj){
                 clusterWiseMarker[clusterId].forEach(marker => {
                     marker.setIcon(marker_cluster);
                 });
+                createAirbnbDetails(jsonData, clusterId);
             });
 
             clusterWiseMarker[data.cluster].push(marker);
         });
+    });
+};
+
+var createAirbnbDetails = function(jsonData, clusterId){
+    var airbnbs = jsonData.filter(data=>{
+        return data.cluster === clusterId;
+    });
+    var clusterDetails = $('#cluster-details');
+    airbnbs.forEach(airbnb=>{
+        var div = document.createElement("DIV");
+        var name = document.createElement("h6");
+        var distance = document.createElement("p");
+        var time = document.createElement("p");
+        var price = document.createElement("p");
+
+        distance.innerText = 'Distance :  '+ airbnb.distance + 'km';
+        time.innerText = 'Time : '+ parseInt(airbnb.timeTaken/60) + 'min';
+        price.innerText = 'Price :  '+ airbnb.price + ' CAD';
+        name.innerText = airbnb.name;
+        div.appendChild(name);
+        div.appendChild(distance);
+        div.appendChild(time);
+        div.appendChild(price);
+        clusterDetails.append(div);
     });
 };
 
