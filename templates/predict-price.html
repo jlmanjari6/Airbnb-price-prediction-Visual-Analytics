@@ -36,6 +36,7 @@
                     </button>
                 </h2>
             </div>
+
             <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
                 <div class="card-body">
                     <div style="width: 50%; max-width: 50%;margin: auto;" class="bd-example">
@@ -46,13 +47,6 @@
                             </ol>
                             <div style="alignment: center" class="carousel-inner">
                                 <div class="carousel-item active">
-                                    <h4 align="center" style="color:white">Correlation matrix</h4>
-                                    {#                                        <p>Explanation</p>#}
-                                    <div>
-                                        <img src="../static/Capture.PNG" class="d-block w-100" alt="...">
-                                    </div>
-                                </div>
-                                <div class="carousel-item">
                                     <h4 align="center" style="color:white">Residual plot for XGBoost Regressor</h4>
                                     <div>
                                         <img src="{{ residual_plot }}" class="d-block w-100" alt="...">
@@ -61,7 +55,7 @@
                                 <div class="carousel-item">
                                     <h4 align="center" style="color:white">Feature Importance for XGBoost Regressor</h4>
                                     <div>
-                                        <img src="../static/feature-selection.png" class="d-block w-100" alt="...">
+                                        <img src={{ feature_importance_plot }} class="d-block w-100" alt="...">
                                     </div>
                                 </div>
                             </div>
@@ -162,7 +156,7 @@
     </div>
 
     <div style="margin-left: 850px">
-        <img style="float:left;height: 60px;width:60px;" src="../static/logo2.png" alt="logo2">
+        <img style="float:left;height: 60px;width:60px;" src="../static/images/logo2.png" alt="logo2">
 
         <p style="font-family: 'Open Sans, verdana';float:bottom;margin-left:70px;color: red;font-weight: bolder;
             font-size: 40px" {% if price == '' %} hidden {% endif %}> ${{ price }}</p>

@@ -6,9 +6,9 @@ var clusterWiseMarker = {};
 
 var initData = function() {
     console.log(window.location.pathname);
-    marker_default = new google.maps.MarkerImage('../static/red-pin.png', new google.maps.Size(30, 30), null, null, new google.maps.Size(30, 30));
-    marker_cluster = new google.maps.MarkerImage('../static/marker_cluster.png', new google.maps.Size(35, 35), null, null, new google.maps.Size(35, 35));
-    marker_pin = new google.maps.MarkerImage('../static/blue-pin.png', new google.maps.Size(50, 50),null, null, new google.maps.Size(50, 50));
+    marker_default = new google.maps.MarkerImage('../static/images/red-pin.png', new google.maps.Size(30, 30), null, null, new google.maps.Size(30, 30));
+    marker_cluster = new google.maps.MarkerImage('../static/images/marker_cluster.png', new google.maps.Size(35, 35), null, null, new google.maps.Size(35, 35));
+    marker_pin = new google.maps.MarkerImage('../static/images/blue-pin.png', new google.maps.Size(50, 50),null, null, new google.maps.Size(50, 50));
 };
 
 var initMap = function() {

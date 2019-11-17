@@ -15,6 +15,7 @@ from sklearn import preprocessing
 from sklearn.cluster import KMeans
 from sklearn.model_selection import train_test_split
 from yellowbrick.regressor import ResidualsPlot
+import matplotlib.pyplot as plt
 
 app = Flask(__name__)
 
@@ -312,6 +313,19 @@ def predict_price():
     tdf['price'] = xgb_reg.predict(tdf)
     output = tdf.loc[(tdf.neighbourhood == selected_neighbourhood) & (tdf.room_type == selected_roomtype), 'price'].iloc[0]
 
+    # to generate feature importance plot
+    features = list(ndf[tdf.columns])
+    regression_imp = xgb_reg.feature_importances_
+    plt.figure(figsize=(10, 6))
+    plt.yscale('log', nonposy='clip')
+    plt.bar(range(len(regression_imp)), regression_imp, align='center', color='green')
+    plt.xticks(range(len(regression_imp)), features, rotation='vertical')
+    plt.title('Feature Importance')
+    plt.ylabel('Importance')
+    plt.savefig(img, format='png')
+    img.seek(0)
+    feature_importance_plot = 'data:image/png;base64,{}'.format(base64.b64encode(img.getvalue()).decode())
+
     # to plot other neighbourhoods with similar price range
     ls1 = (tdf[tdf.price <= output]).nlargest(5, "price")
     ls2 = (tdf[tdf.price > output]).nsmallest(5, "price")
@@ -341,7 +355,7 @@ def predict_price():
                            plot_generated_room=plot_generated_room, sel_province=request.form.get('provinceID'),
                            sel_neighbourhood=sel_neighbourhood, sel_roomtype=sel_roomtype,sel_min=sel_min,
                            sel_bedrooms=sel_bedrooms, sel_accommodates=int(request.form.get('accommodateID')),
-                           residual_plot=residual_plot)
+                           residual_plot=residual_plot,feature_importance_plot=feature_importance_plot)
 
 
 def get_price_plots(recommended, plot_type):
