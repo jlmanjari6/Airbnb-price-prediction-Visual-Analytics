@@ -327,25 +327,23 @@ def predict_price():
     feature_importance_plot = 'data:image/png;base64,{}'.format(base64.b64encode(img.getvalue()).decode())
 
     # to plot other neighbourhoods with similar price range
-    ls1 = (tdf[tdf.price <= output]).nlargest(5, "price")
-    ls2 = (tdf[tdf.price > output]).nsmallest(5, "price")
+    ls1 = (tdf[(tdf.price <= output) & (tdf.room_type == selected_roomtype)]).nlargest(5, "price")
+    ls2 = (tdf[(tdf.price > output) & (tdf.room_type == selected_roomtype)]).nsmallest(5, "price")
     ls = ls1.append(ls2)
     recommended_neighbourhoods = {}
     for row in ls.iterrows():
         for key, value in le_neighbourhood_mapping.items():
             if value == int(row[1].neighbourhood):
                 recommended_neighbourhoods[key] = round(row[1].price, 2)
-
     plot_generated_neigh = get_price_plots(recommended_neighbourhoods, "Neighbourhood")
 
     # to plot for other room types
     recommended_roomtypes = {}
-    ls = tdf.loc[(tdf.neighbourhood == selected_neighbourhood) & (tdf.room_type != selected_roomtype)]
+    ls = tdf.loc[(tdf.neighbourhood == selected_neighbourhood)]
     for row in ls.iterrows():
         for key,value in le_room_type_mapping.items():
             if value == int(row[1].room_type):
                 recommended_roomtypes[key] = round(row[1].price, 2)
-
     plot_generated_room = get_price_plots(recommended_roomtypes, "Room type")
 
     return render_template('predict-price.html', provinces=provinces, neighbourhoods=neighborhoods,
