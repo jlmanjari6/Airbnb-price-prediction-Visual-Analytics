@@ -134,15 +134,16 @@ def render_airbnbs():
 def generate_marker_latlong(r_df):
     latitudes_list = list(r_df.latitude)
     longitudes_list = list(r_df.longitude)
-    map2 = folium.Map(location=[latitudes_list[0], longitudes_list[0]] , zoom_start='12', width='100%',height='75%')
+    map2 = folium.Map(location=[latitudes_list[0], longitudes_list[0]], zoom_start='12', width='100%', height='75%')
     for index, row in r_df.iterrows():
         tooltip = 'Click here to know more!'
-        pop_string = "<b>Name: </b>" + row['name'] + "<br><br>" + "<b>Minimum nights: </b>" + str(
-            row['minimum_nights']) + "<br><br>" + "<b>Ratings: </b>" + str(
-            row['ratings']) + "<br><br>" + "<b>Bedrooms: </b>" + str(
-            row['bedrooms']) + "<br><br>" + "<b>Bathrooms: </b>" + str(
-            row['bathrooms']) + "<br><br>" + "<b>Amenities: </b>" + row['amenities']
-        folium.Marker([row['latitude'], row['longitude']],  icon=folium.Icon(color='red', icon='map-marker'),
+        pop_string = "<b>Name: </b>" + str(row['name']) + "<br><br>" + \
+                     "<b>Minimum nights: </b>" + str(row['minimum_nights']) + "<br><br>" + \
+                     "<b>Ratings: </b>" + str(row['ratings']) + "<br><br>" + \
+                     "<b>Bedrooms: </b>" + str(row['bedrooms']) + "<br><br>" + \
+                     "<b>Bathrooms: </b>" + str(row['bathrooms']) + "<br><br>" + \
+                     "<b>Amenities: </b>" + str(row['amenities'])
+        folium.Marker([row['latitude'], row['longitude']], icon=folium.Icon(color='red', icon='map-marker'),
                       popup=pop_string, tooltip=tooltip).add_to(map2)
     return map2
 
@@ -383,6 +384,9 @@ def get_price_plots(recommended, plot_type):
     return graph_json
 
 
+# *********************************************** Clustering page ***************************************************
+
+
 @app.route('/Clustering', methods=['GET'])
 def render_clustering():
     return render_template('clustering.html')
@@ -420,6 +424,7 @@ def constructDistanceMatrixUrl(dataFrame, latitude, longitude):
 
 
 def clusterData(latitude, longitude, pointOfInterest):
+    df_entire = main_class_obj.cleaned_df
     timeList = []
     distanceList = []
     df = df_entire[requiredColummns]
