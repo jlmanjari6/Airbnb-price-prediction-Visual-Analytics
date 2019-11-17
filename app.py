@@ -141,12 +141,17 @@ def generate_marker_latlong(r_df):
             row['ratings']) + "<br><br>" + "<b>Bedrooms: </b>" + str(
             row['bedrooms']) + "<br><br>" + "<b>Bathrooms: </b>" + str(
             row['bathrooms']) + "<br><br>" + "<b>Amenities: </b>" + row['amenities']
-        folium.Marker([row['latitude'], row['longitude']], popup=pop_string, tooltip=tooltip).add_to(map2)
+        folium.Marker([row['latitude'], row['longitude']],  icon=folium.Icon(color='red', icon='map-marker'),
+                      popup=pop_string, tooltip=tooltip).add_to(map2)
     return map2
 
 
 @app.route('/GenerateMarkers', methods=['GET', 'POST'])
 def generate_markers():
+    selected_province = request.form.get('provinceID')
+    selected_neighbourhood = request.form.get('neighbourhoods')
+    selected_roomtype = request.form.get('roomtypes')
+
     output = get_filtered_df()
     r_df = output[0]
     provinces = output[1]
@@ -154,7 +159,8 @@ def generate_markers():
     roomtypes = output[3]
     response_map = generate_marker_latlong(r_df)
     return render_template('find-airbnbs.html', provinces=provinces, neighborhoods=neighborhoods, roomtypes = roomtypes
-                           , response_map=response_map)
+                           , response_map=response_map, sel_province=selected_province, sel_neighbourhood=selected_neighbourhood,
+                           sel_roomtype=selected_roomtype)
 
 
 def get_filtered_df():
