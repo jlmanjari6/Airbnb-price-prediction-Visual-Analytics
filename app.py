@@ -315,6 +315,7 @@ def predict_price():
     output = tdf.loc[(tdf.neighbourhood == selected_neighbourhood) & (tdf.room_type == selected_roomtype), 'price'].iloc[0]
 
     # to generate feature importance plot
+    img = io.BytesIO()
     features = list(ndf[tdf.columns])
     regression_imp = xgb_reg.feature_importances_
     plt.figure(figsize=(10, 6))
@@ -326,6 +327,7 @@ def predict_price():
     plt.savefig(img, format='png')
     img.seek(0)
     feature_importance_plot = 'data:image/png;base64,{}'.format(base64.b64encode(img.getvalue()).decode())
+    # feature_importance_plot=""
 
     # to plot other neighbourhoods with similar price range
     ls1 = (tdf[(tdf.price <= output) & (tdf.room_type == selected_roomtype)]).nlargest(5, "price")
