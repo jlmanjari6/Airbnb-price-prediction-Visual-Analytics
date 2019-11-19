@@ -310,24 +310,25 @@ def predict_price():
     img.seek(0)
     residual_plot = 'data:image/png;base64,{}'.format(base64.b64encode(img.getvalue()).decode())
 
+    xgb_reg = xgb.XGBRegressor(max_depth=5, min_child_weight=24)
     xgb_reg.fit(ndf[tdf.columns], ndf.price)
     tdf['price'] = xgb_reg.predict(tdf)
     output = tdf.loc[(tdf.neighbourhood == selected_neighbourhood) & (tdf.room_type == selected_roomtype), 'price'].iloc[0]
 
     # to generate feature importance plot
-    img = io.BytesIO()
+    img1 = io.BytesIO()
     features = list(ndf[tdf.columns])
     regression_imp = xgb_reg.feature_importances_
-    plt.figure(figsize=(10, 6))
-    plt.yscale('log', nonposy='clip')
-    plt.bar(range(len(regression_imp)), regression_imp, align='center', color='green')
+    fig, ax = plt.subplots()
+    # ax.figure(figsize=(10, 6))
+    # ax.yscale('log', nonposy='clip')
+    ax.bar(range(len(regression_imp)), regression_imp, align='center', color='green')
     plt.xticks(range(len(regression_imp)), features, rotation='vertical')
     plt.title('Feature Importance')
-    plt.ylabel('Importance')
-    plt.savefig(img, format='png')
-    img.seek(0)
-    feature_importance_plot = 'data:image/png;base64,{}'.format(base64.b64encode(img.getvalue()).decode())
-    # feature_importance_plot=""
+    ax.set_ylabel('Importance')
+    fig.savefig(img1, format='png')
+    img1.seek(0)
+    feature_importance_plot = 'data:image/png;base64,{}'.format(base64.b64encode(img1.getvalue()).decode())
 
     # to plot other neighbourhoods with similar price range
     ls1 = (tdf[(tdf.price <= output) & (tdf.room_type == selected_roomtype)]).nlargest(5, "price")
