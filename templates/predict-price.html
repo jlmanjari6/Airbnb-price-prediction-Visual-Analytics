@@ -26,7 +26,7 @@
 {% endblock %}
 {% block body %}
     <div class="accordion" {% if plot_generated_room != 'NA' %} style="display: block" {% endif %}
-         {% if plot_generated_room == 'NA' %} style="display: None" {% endif %} id="accordionExample">
+            {% if plot_generated_room == 'NA' %} style="display: None" {% endif %} id="accordionExample">
         <div>
             <div class="card-header" id="headingOne">
                 <h2 class="mb-0">
@@ -39,39 +39,10 @@
             </div>
 
             <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
-                <div class="card-body">
-                    <div style="width: 50%; max-width: 50%;margin: auto;" class="bd-example">
-                        <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
-                            <ol class="carousel-indicators">
-                                <li data-target="#carouselExampleCaptions" data-slide-to="0" class="active"></li>
-                                <li data-target="#carouselExampleCaptions" data-slide-to="1"></li>
-                            </ol>
-                            <div style="alignment: center" class="carousel-inner">
-                                <div class="carousel-item active">
-                                    <h4 align="center" style="color:white">Residual plot for XGBoost Regressor</h4>
-                                    <div>
-                                        <img src="{{ residual_plot }}" class="d-block w-100" alt="...">
-                                    </div>
-                                </div>
-                                <div class="carousel-item">
-                                    <h4 align="center" style="color:white">Feature Importance for XGBoost Regressor</h4>
-                                    <div>
-                                        <img src="{{ feature_importance_plot }}" class="d-block w-100" alt="...">
-                                    </div>
-                                </div>
-                            </div>
-                            <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button"
-                               data-slide="prev">
-                                <span class="carousel-control-prev-icon" style="background-color: black" aria-hidden="true"></span>
-                                <span class="sr-only">Previous</span>
-                            </a>
-                            <a class="carousel-control-next" href="#carouselExampleCaptions" role="button"
-                               data-slide="next">
-                                <span class="carousel-control-next-icon" style="background-color: black" aria-hidden="true"></span>
-                                <span class="sr-only">Next</span>
-                            </a>
-                        </div>
-                    </div>
+                <div class="card" style="display: inline-block; padding:10px ;margin-left:60px;background-color: darkseagreen">
+                    {#                 <img src="{{ residual_plot }}"  alt="...">#}
+                    <img src="{{ regression_line }}" width="700px" alt="...">
+                    <img src="{{ feature_importance_plot }}" width="700px" alt="...">
                 </div>
             </div>
         </div>
@@ -163,11 +134,11 @@
             font-size: 40px" {% if price == '' %} hidden {% endif %}> ${{ price }}</p>
     </div>
 
-    <div id="mainContainer" style="margin-left: 400px;margin-top: 50px">
+    <div id="plotRoomTypeContainer" style="margin-top:700px;margin-left: 600px;margin-top: 50px">
 
     </div>
 
-    <div id="plotRoomTypeContainer" style="margin-top:700px;margin-left: 600px;margin-top: 50px">
+    <div id="mainContainer" style="margin-left: 400px;margin-top: 50px">
 
     </div>
 

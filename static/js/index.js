@@ -5,7 +5,6 @@ var clusterSet = new Set();
 var clusterWiseMarker = {};
 
 var initData = function() {
-    console.log(window.location.pathname);
     marker_default = new google.maps.MarkerImage('../static/images/red-pin.png', new google.maps.Size(30, 30), null, null, new google.maps.Size(30, 30));
     marker_cluster = new google.maps.MarkerImage('../static/images/marker_cluster.png', new google.maps.Size(35, 35), null, null, new google.maps.Size(35, 35));
     marker_pin = new google.maps.MarkerImage('../static/images/blue-pin.png', new google.maps.Size(50, 50),null, null, new google.maps.Size(50, 50));
@@ -66,6 +65,9 @@ var clearMarkers = function () {
 
 var createPlaceOfInterest = function(placeObj){
     newSearch = false;
+    clusterDetails = $('#cluster-details');
+    clusterDetails.empty();
+    console.log(clusterDetails);
     marker_interest = new google.maps.Marker({
         position: {
             lat: placeObj.lat(),
@@ -125,14 +127,16 @@ var createPlaceOfInterest = function(placeObj){
     });
 };
 
+var clusterDetails;
 var createAirbnbDetails = function(jsonData, clusterId){
+    clusterDetails = $('#cluster-details');
+    clusterDetails.empty();
     var airbnbs = jsonData.filter(data=>{
         return data.cluster === clusterId;
     });
-    var clusterDetails = $('#cluster-details');
     airbnbs.forEach(airbnb=>{
         var div = document.createElement("DIV");
-        var name = document.createElement("h6");
+        var name = document.createElement("h5");
         var distance = document.createElement("p");
         var time = document.createElement("p");
         var price = document.createElement("p");
@@ -141,12 +145,34 @@ var createAirbnbDetails = function(jsonData, clusterId){
         time.innerText = 'Time : '+ parseInt(airbnb.timeTaken/60) + 'min';
         price.innerText = 'Price :  '+ airbnb.price + ' CAD';
         name.innerText = airbnb.name;
+        div.className = 'similar-airbnb-border';
+        div.onclick = function(){
+            pooUpSelectedAirbnb(airbnb,clusterId);
+
+        };
         div.appendChild(name);
         div.appendChild(distance);
         div.appendChild(time);
         div.appendChild(price);
         clusterDetails.append(div);
     });
+};
+
+var pooUpSelectedAirbnb = function(airbnb,clusterId){
+    clusterWiseMarker[clusterId].forEach(marker => {
+        if(roundOff(marker.position.lat()) === roundOff(airbnb.latitude) && roundOff(marker.position.lng()) === roundOff(airbnb.longitude)){
+            var infowindow = new google.maps.InfoWindow({
+              content: popContent(airbnb)
+            });
+            prevInfoWindow.close();
+            prevInfoWindow = infowindow;
+            infowindow.open(map, marker);
+        }
+    });
+};
+
+var roundOff = function(value){
+    return Math.round(value * 100000) / 100000;
 };
 
 var loadUrl = function() {

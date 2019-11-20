@@ -20,7 +20,7 @@ import matplotlib.pyplot as plt
 app = Flask(__name__)
 
 df_entire = pd.read_csv('listings.csv')
-oneHotColumns = ['neighbourhood', 'room_type']
+oneHotColumns = ['room_type']
 requiredColummns = oneHotColumns + ['name', 'latitude', 'longitude', 'price']
 jsonData = []
 
@@ -310,6 +310,24 @@ def predict_price():
     img.seek(0)
     residual_plot = 'data:image/png;base64,{}'.format(base64.b64encode(img.getvalue()).decode())
 
+    # to plot regression line
+    img2 = io.BytesIO()
+    d = ndf[ndf.price <= 200]
+    d_X_train, d_X_test, d_y_train, d_y_test = train_test_split(d.loc[:, d.columns != 'price'], d.price, test_size=0.3,
+                                                        random_state=10)
+    xgb_reg = xgb.XGBRegressor(max_depth=5, min_child_weight=24)
+    xgb_reg.fit(d_X_train, d_y_train)
+    y_pred = xgb_reg.predict(d_X_test)
+    fig, ax = plt.subplots()
+    ax.scatter(d_y_test, y_pred, edgecolors=(0, 0, 0))
+    ax.plot([d_y_test.min(), d_y_test.max()], [d_y_test.min(), d_y_test.max()], 'k--', lw=4)
+    ax.set_xlabel('Actual')
+    ax.set_ylabel('Predicted')
+    ax.set_title("Actual price Vs Predicted price")
+    fig.savefig(img2, format='png')
+    img2.seek(0)
+    regression_line = 'data:image/png;base64,{}'.format(base64.b64encode(img2.getvalue()).decode())
+
     xgb_reg = xgb.XGBRegressor(max_depth=5, min_child_weight=24)
     xgb_reg.fit(ndf[tdf.columns], ndf.price)
     tdf['price'] = xgb_reg.predict(tdf)
@@ -320,10 +338,8 @@ def predict_price():
     features = list(ndf[tdf.columns])
     regression_imp = xgb_reg.feature_importances_
     fig, ax = plt.subplots()
-    # ax.figure(figsize=(10, 6))
-    # ax.yscale('log', nonposy='clip')
     ax.bar(range(len(regression_imp)), regression_imp, align='center', color='green')
-    plt.xticks(range(len(regression_imp)), features, rotation='vertical')
+    plt.xticks(range(len(regression_imp)), features, rotation='horizontal')
     plt.title('Feature Importance')
     ax.set_ylabel('Importance')
     fig.savefig(img1, format='png')
@@ -357,7 +373,8 @@ def predict_price():
                            plot_generated_room=plot_generated_room, sel_province=request.form.get('provinceID'),
                            sel_neighbourhood=sel_neighbourhood, sel_roomtype=sel_roomtype,sel_min=sel_min,
                            sel_bedrooms=sel_bedrooms, sel_accommodates=int(request.form.get('accommodateID')),
-                           residual_plot=residual_plot,feature_importance_plot=feature_importance_plot)
+                           residual_plot=residual_plot,feature_importance_plot=feature_importance_plot,
+                           regression_line=regression_line)
 
 
 def get_price_plots(recommended, plot_type):
@@ -378,7 +395,7 @@ def get_price_plots(recommended, plot_type):
                           xaxis_title=plot_type, yaxis_title="Price")
 
     if plot_type == "Room type":
-        fig.update_traces(marker_color='green', marker_line_color='rgb(8,48,107)',
+        fig.update_traces(marker_color='crimson', marker_line_color='rgb(8,48,107)',
                           marker_line_width=0.3, opacity=0.8)
         fig.update_layout(title="If you want to go for any other room type:", width=600, height=700,
                           xaxis_title=plot_type, yaxis_title="Price")

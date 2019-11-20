@@ -80,3 +80,12 @@ li a {
 .map-wrapper input {
     margin-bottom: 25px;
 }
+
+.similar-airbnb h4{
+	text-align: center;
+}
+
+.similar-airbnb-border {
+	border-bottom: 1px solid grey;
+	cursor: pointer;
+}
