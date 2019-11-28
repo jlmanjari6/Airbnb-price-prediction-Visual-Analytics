@@ -89,3 +89,53 @@ li a {
 	border-bottom: 1px solid grey;
 	cursor: pointer;
 }
+
+/**/
+
+.left-menu-wrapper {
+  float: left;width: 20%;
+  margin-left: 20px;
+  margin-right:10px;
+  margin-top:20px;
+  font-weight: bold;
+  background-color: lightsteelblue;
+}
+
+.submit-airbnb-button {
+  margin-left: 50px;
+  margin-top: 20px;
+  background-color: chocolate;
+  color: white;
+  font-weight: bold;
+  padding: 10px 30px;
+}
+
+.main-container {
+  margin-left: 370px;
+  margin-top:20px;
+}
+
+.recommendation-header {
+  font-weight:bold;
+  color: crimson;
+}
+
+.index-left-menu-wrapper {
+  float: left;
+  width: 20%;
+  margin-left: 20px;
+  margin-right:10px;
+  margin-top:20px;
+  font-weight: bold;
+  background-color: lightsteelblue;
+}
+
+.price-prediction-anchor {
+  background-color: chocolate;
+  color:white;
+  font-weight:bold;
+}
+
+.mainContainer iframe {
+  margin-top:20px;
+}

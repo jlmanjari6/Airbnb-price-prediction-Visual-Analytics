@@ -3,17 +3,17 @@
 {% block head %} {{ super() }} {% endblock %}
 {% block body %}
 
-    <div id="leftMenuDiv" class="card" style="float: left;width: 20%;margin-left: 20px;margin-right:10px;margin-top:20px;font-weight: bold;background-color: lightsteelblue">
+    <div id="leftMenuDiv" class="card index-left-menu-wrapper">
         <img src="/static/images/airbnb.jpg" class="card-img-top" alt="logo">
         <div class="card-body">
             <h5 class="card-title">Welcome to Airbnb price prediction application!</h5>
             <p class="card-text"></p>
-            <a href="/PricePrediction" class="btn stretched-link" style="background-color: chocolate;color:white;font-weight:bold" >Go to price prediction page</a>
+            <a href="/PricePrediction" class="btn stretched-link price-predition-anchor">Go to price prediction page</a>
         </div>
     </div>
 
     <div id="mainContainer">
-        <iframe style="margin-top:20px;" width=1200 height=600 src="{{ url_for('static', filename='dashboard-map5.html') }}"></iframe>
+        <iframe width=1200 height=600 src="{{ url_for('static', filename='dashboard-map5.html') }}"></iframe>
     </div>
 
 {% endblock %}

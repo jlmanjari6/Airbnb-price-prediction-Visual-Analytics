@@ -442,7 +442,7 @@ def constructDistanceMatrixUrl(dataFrame, latitude, longitude):
     url += '&key=AIzaSyCYnhazJCeczhD1PM0yt5mJc39093i5-5Q'
     return url
 
-
+# function that clusters the nearest aibnbs.
 def clusterData(latitude, longitude, pointOfInterest):
     df_entire = main_class_obj.cleaned_df
     timeList = []
@@ -478,7 +478,7 @@ def clusterData(latitude, longitude, pointOfInterest):
     jsonData = df_cluster.to_json(orient='records')
     return jsonData
 
-
+# this endpoint will be called when a user selects the point of interest
 @app.route('/getData')
 def get_data():
     latitude = request.args.get('lat')
@@ -487,10 +487,8 @@ def get_data():
     longitude = float(longitude)
     pointOfInterest = (latitude, longitude)
     outputData = clusterData(latitude, longitude, pointOfInterest)
-    with open('json.json', 'w') as f:
-        f.write(outputData)
-    # with open('json.json', 'r') as content_file:
-    #     outputData = content_file.read()
+    # with open('json.json', 'w') as f:
+    #     f.write(outputData)
     return outputData
 
 
