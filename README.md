@@ -16,6 +16,13 @@ As part of this project, we aim to develop a web application where, users can ge
 
 Python 3+, Flask, JQuery, Bootstrap
 
+<h1> How to run the application </h1>
+<ul> 
+ <li> Clone/download the code </li>
+ <li> Install python 3+ </li>
+ <li> Use any IDE of your choice - Visual studio code, Pycharm etc </li>
+ <li> Make sure you install all the libraries as listed in the file requirements.txt in the repository </li>
+</ul>
 
 <h1> Functionalities </h1>
 
