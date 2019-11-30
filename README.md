@@ -1,5 +1,11 @@
 <h1> Visual Analytics Project -  Airbnb Price Prediction </h1>
 
+<h1> Live Demo </h1>
+<p>
+ <label> Click this link here: </label>
+ <a href="https://airbnb-price-prediction.herokuapp.com/"> https://airbnb-price-prediction.herokuapp.com/ </a>
+  </p>
+
 
 <h1> Description </h1>
 
