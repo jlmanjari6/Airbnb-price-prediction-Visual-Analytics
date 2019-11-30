@@ -1,4 +1,4 @@
-<h1> Airbnb price prediction visual analytics project </h1>
+<h1> Visual Analytics Project -  Airbnb Price Prediction </h1>
 
 
 <h1> Description </h1>
@@ -13,9 +13,11 @@ Python 3+, Flask, JQuery, Bootstrap
 
 <h1> Functionalities </h1>
 
-Exploratory data analysis to show trends 
-Airbnb price prediction - Machine learning with XGBoost
-Airbnb recommendations - Clustering with K-Means
+<ul>
+  <li>Exploratory data analysis to show trends </li>
+  <li>Airbnb price prediction - Machine learning with XGBoost</li>
+  <li>Airbnb recommendations - Clustering with K-Means</li>
+</ul>
 
 
 <h1> Modules developed </h1>
