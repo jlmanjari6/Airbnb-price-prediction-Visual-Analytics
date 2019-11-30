@@ -80,7 +80,7 @@ var createPlaceOfInterest = function(placeObj){
         icon: marker_pin
     });
 
-    $.get("http://127.0.0.1:5000/getData?lat="+placeObj.lat()+"&lng="+placeObj.lng(), function(data, status){
+    $.get("/getData?lat="+placeObj.lat()+"&lng="+placeObj.lng(), function(data, status){
         clusterSet = new Set();
         clusterWiseMarker = {};
 
