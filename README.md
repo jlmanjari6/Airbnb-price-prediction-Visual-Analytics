@@ -1,22 +1,25 @@
-Description
-******************
+<h1> Airbnb price prediction visual analytics project </h1>
+
+
+<h1> Description </h1>
+
 As part of this project, we aim to develop a web application where, users can get an efficient platform to know more about Airbnbs and get a predicted price based on the requirements provided by the user. Also, to show the performance of our price prediction model to the user to help perceive on how much he/she can rely on the predictions. More importantly, our web application aims to provide Airbnb recommendations to the user based on real time distance and time taken to travel to any place of interest in Canada. This way we are providing recommendations about the best and nearest Airbnb’s accessible to the user which benefits the users in more reliable way.
 
 
-Technical stack
-******************
+<h1> Technical stack </h1>
+
 Python 3+, Flask, JQuery, Bootstrap
 
 
-Functionalities
-******************
+<h1> Functionalities </h1>
+
 Exploratory data analysis to show trends 
 Airbnb price prediction - Machine learning with XGBoost
 Airbnb recommendations - Clustering with K-Means
 
 
-Modules developed
-******************
+<h1> Modules developed </h1>
+
 <b> Trends – Number of Airbnbs:</b>
 In this module, we are providing stacked bar charts to the user to view total number of Airbnbs for the selected user inputs. Each bar chart holds number of Airbnbs on the y-axis and user may select one parameter for x-axis, and desired category required to segment each bar to represent different types of selected category with different colors. The category for segmentation of bars and parameter for x-axis might be one among the 4 given options - bedrooms, room type, neighborhood, number of Airbnbs available in next 30 days. In this way, this module lets the user to select 16 different combinations producing 16 different bar charts. 
 We chose this visualization module because user can be able to see the number of Airbnbs available in a desired province based on various combinations of parameters through one single visualization. From the image below, it can be inferred from the tooltip that there are 12 Airbnbs of private room type in New Brunswick with an availability of 12 days. This Plotly chart allows the user to zoom any particular point in the bar chart, slide the chart horizontally and vertically to see the results clearly.
@@ -37,12 +40,13 @@ This module is developed completely for dynamic visualizations including dynamic
 The workflow of giving recommendations to user begins with selecting a place of interest from the user. We have given the users an option to search and select their place of interest. Google maps search API is used to serve this purpose. A blue marker is placed on the map to indicate the place of interest of the user. To find the real-time distance and time taken to reach the Airbnb from point of interest, we have used Google Distance Matrix API. This Google API by accepting multiple sources and multiple destinations, returns the real-time distance and time taken to reach the place of interest from each Airbnb. There are some advanced options in these APIs with using which we can calculate the traffic conditions and select transport options like bus. We intend to use these advanced features as part of our future work.
 Once the clustering is completed, the data is sent to the user interface of the application. Currently, we are showing nearest 50 Airbnbs to the user. As part of future work, we intend to make this configurable. We have used Google maps to plot the nearest Airbnbs and some recommendations. The 50 nearest Airbnbs are listed as red markers on the Google map. Once the user selects any Airbnb, all the other Airbnbs that are similar to the one selected (belongs to one particular cluster) will be highlighted with green markers as shown in the above image. Also, a summary of the recommended Airbnbs will be displayed on the right-hand side of the screen. The summary includes the name of the Airbnb, distance from the place of interest, time taken to reach the Airbnb and price of stay. The user can scroll through the recommendations and select any Airbnb to get it highlighted on the screen instead of manually selecting every Airbnb for information.
 
-Future work
-*************************
-•	As of now, we have calculated the distance and time taken assuming the user uses their own transportation. If the user wants to use public transport or to go by walk, there must be an option to prefer distance over time taken. To serve this purpose, we would like to provide an option to the user in future to choose distance, time taken or both as inputs to clustering.
-•	In future, we also intend to include all the provinces in Canada for our application. The code is implemented in such a way that it does not require much changes to accommodate more data. 
-•	We would also like to depict more trends on the price variations among different provinces/neighborhoods. 
-•	Finally, we also intend to incorporate Airbnb trends by considering exact date of accommodation, real time traffic and navigation.
+<h1> Future work </h1>
+<ul>
+<li>As of now, we have calculated the distance and time taken assuming the user uses their own transportation. If the user wants to use public transport or to go by walk, there must be an option to prefer distance over time taken. To serve this purpose, we would like to provide an option to the user in future to choose distance, time taken or both as inputs to clustering.</li>
+<li>In future, we also intend to include all the provinces in Canada for our application. The code is implemented in such a way that it does not require much changes to accommodate more data. </li>
+<li>	We would also like to depict more trends on the price variations among different provinces/neighborhoods. </li>
+<li>	Finally, we also intend to incorporate Airbnb trends by considering exact date of accommodation, real time traffic and navigation.</li>
+  </ul>
 
 
 
