@@ -19,10 +19,9 @@
 <body>
 <header>{% block head %}{% endblock %}</header>
 
-<h1 class="card-header" style="font-family: Verdana;font-size: 30px;font-weight: bold;color: azure;margin-left:10px;margin-right:10px;background-color: chocolate;
-padding-top: 25px;padding-bottom: 15px;letter-spacing: 2px"> AIRBNB PRICE PREDICTION </h1>
+<h1 class="card-header card-header-h1"> AIRBNB PRICE PREDICTION </h1>
 
-<div id="MenuBar" style="margin-top: 20px;margin-left: 30px;margin-right: 30px" class="list-group list-group-horizontal">
+<div id="MenuBar" class="list-group list-group-horizontal list-group-margin">
     <ul class="rounded-left" style="background-color: #8363A4">
         <li><a style="font-weight: bold;color: azure;{% if request.path == '/' %}background-color:chocolate{% endif %}"
                {% if request.path == '/' %}class="active"{% endif %} href="/">Dashboard</a></li>

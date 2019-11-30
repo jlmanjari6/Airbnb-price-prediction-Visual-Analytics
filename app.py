@@ -28,24 +28,21 @@ jsonData = []
 if __name__ == '__main__':
     app.run(debug=True)
 
-
 class MainClass:
     def __init__(self):
         self.cleaned_df = pd.read_csv("cleaned_df.csv")
-
 
 class PricePrediction:
     def __init__(self):
         self.preprocessed_df = pd.read_csv("preprocessed_df.csv")
 
-
 main_class_obj = MainClass()
 # **************************************************** Dashboard page **************************************************
+# route for home page
 @app.route('/', methods=['GET'])
 def render_home():
     neighbourhood_groups = []
     neighborhoods = []
-
     df = main_class_obj.cleaned_df
     lats2019 = df['latitude'].tolist()
     lons2019 = df['longitude'].tolist()
@@ -55,8 +52,8 @@ def render_home():
     map1.save(outfile="./static/dashboard-map5.html")
     return render_template('index.html', neighbourhood_groups=neighbourhood_groups, neighborhoods=neighborhoods)
 
-
 # ****************************************************** Trends page ***************************************************
+# route for trends page
 @app.route('/Trends', methods=['GET'])
 def render_trends():
     df = main_class_obj.cleaned_df
@@ -67,7 +64,6 @@ def render_trends():
     dfg = df[df.province == provinces[0]]
     plot_generated = get_plot(df, dfg, x, y, provinces[0])
     return render_template('trends.html', provinces=provinces, plot=plot_generated)
-
 
 def get_plot(df, dfg, x, y, selected_province):
     y_values = list(getattr(df, y).unique())
@@ -90,7 +86,7 @@ def get_plot(df, dfg, x, y, selected_province):
     graph_json = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     return graph_json
 
-
+# route to generate chart in runtime
 @app.route('/GenerateChart', methods=['GET', 'POST'])
 def generate_plot():
     selected_province = request.form.get('provinceID')
@@ -103,9 +99,7 @@ def generate_plot():
     return render_template('trends.html', plot=plot_generated, provinces=provinces, sel_x=x, sel_y=y ,
                            sel_province=selected_province)
 
-
 # ************************************************ Find Airbnbs page ***************************************************
-
 
 @app.route('/FindAirbnbs', methods=['GET'])
 def render_airbnbs():
@@ -129,7 +123,6 @@ def render_airbnbs():
     response_map = generate_marker_latlong(r_df)
     return render_template('find-airbnbs.html', provinces=provinces, neighborhoods=neighborhoods, roomtypes = roomtypes
                            , response_map=response_map)
-
 
 def generate_marker_latlong(r_df):
     latitudes_list = list(r_df.latitude)
@@ -163,7 +156,6 @@ def generate_markers():
     return render_template('find-airbnbs.html', provinces=provinces, neighborhoods=neighborhoods, roomtypes = roomtypes
                            , response_map=response_map, sel_province=selected_province, sel_neighbourhood=selected_neighbourhood,
                            sel_roomtype=selected_roomtype)
-
 
 def get_filtered_df():
     df = main_class_obj.cleaned_df
@@ -202,9 +194,7 @@ def get_roomtypes(neighbourhoodID):
     roomtypes = list(p_df.room_type.unique())
     return jsonify(roomtypes)
 
-
 # *********************************************** Predict price page ***************************************************
-
 
 @app.route('/PricePrediction', methods=['GET'])
 def render_price_prediction():
@@ -403,10 +393,8 @@ def get_price_plots(recommended, plot_type):
     graph_json = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     return graph_json
 
-
 # *********************************************** Clustering page ***************************************************
-
-
+# route to return clustering page
 @app.route('/Clustering', methods=['GET'])
 def render_clustering():
     return render_template('clustering.html')

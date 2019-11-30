@@ -4,14 +4,15 @@ var marker_default, marker_cluster, marker_pin, marker_interest;
 var clusterSet = new Set();
 var clusterWiseMarker = {};
 
+// initialise the markers with their respective icon
 var initData = function() {
     marker_default = new google.maps.MarkerImage('../static/images/red-pin.png', new google.maps.Size(30, 30), null, null, new google.maps.Size(30, 30));
     marker_cluster = new google.maps.MarkerImage('../static/images/marker_cluster.png', new google.maps.Size(35, 35), null, null, new google.maps.Size(35, 35));
     marker_pin = new google.maps.MarkerImage('../static/images/blue-pin.png', new google.maps.Size(50, 50),null, null, new google.maps.Size(50, 50));
 };
 
+// initialise the google map
 var initMap = function() {
-    // New Brunswick lat long position
     initData();
     var initialLocation = {
         lat: 46.5653,
@@ -23,13 +24,12 @@ var initMap = function() {
             streetViewControl: false,
             center: initialLocation
         });
-
     autocomplete = new google.maps.places.Autocomplete((
         document.getElementById('autocomplete')), {});
     autocomplete.addListener('place_changed', onPlaceChanged);
-
 };
 
+// Listener function called when user enters the place of interest
 var onPlaceChanged = function() {
     place= autocomplete.getPlace();
     if (place.geometry) {
@@ -42,6 +42,8 @@ var onPlaceChanged = function() {
     }
 };
 
+// create content for the marker pop-up.
+// it has name of the airbnb, room-type, distance, time taken and price
 var popContent = function(airbnbObj){
     return '<h5>'+airbnbObj.name+'</h5>'+
     '</br><span>Room type :</span>&nbsp;<span>'+airbnbObj.roomType+'</span>'+
@@ -63,6 +65,7 @@ var clearMarkers = function () {
     marker_interest.setMap(null);
 }
 
+// creates the place of interest and then gets the clustered data from the backend.
 var createPlaceOfInterest = function(placeObj){
     newSearch = false;
     clusterDetails = $('#cluster-details');
@@ -127,6 +130,8 @@ var createPlaceOfInterest = function(placeObj){
     });
 };
 
+// shows Airbnb summary on the right side of the cluster page.
+// on selecting an Airbnb, it will get highlighted on the map.
 var clusterDetails;
 var createAirbnbDetails = function(jsonData, clusterId){
     clusterDetails = $('#cluster-details');
@@ -158,6 +163,7 @@ var createAirbnbDetails = function(jsonData, clusterId){
     });
 };
 
+// makes the Airbnb marker to be highlighted on map when user selects Airbnb from the Recommendations
 var pooUpSelectedAirbnb = function(airbnb,clusterId){
     clusterWiseMarker[clusterId].forEach(marker => {
         if(roundOff(marker.position.lat()) === roundOff(airbnb.latitude) && roundOff(marker.position.lng()) === roundOff(airbnb.longitude)){
@@ -171,10 +177,12 @@ var pooUpSelectedAirbnb = function(airbnb,clusterId){
     });
 };
 
+// function to roundoff to 5 decimal places
 var roundOff = function(value){
     return Math.round(value * 100000) / 100000;
 };
 
+// loads the initial google map
 var loadUrl = function() {
     $('#googleMaps').attr('src', 'https://maps.googleapis.com/maps/api/js?key=' + googleMapAPIKey + '&libraries=places&callback=initMap');
 };
