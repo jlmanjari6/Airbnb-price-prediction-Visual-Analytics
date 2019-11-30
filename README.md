@@ -19,6 +19,15 @@ Python 3+, Flask, JQuery, Bootstrap
   <li>Airbnb recommendations - Clustering with K-Means</li>
 </ul>
 
+<h1> Steps involved </h1>
+<ul>
+  <li> Data cleaning and preprocessing </li>
+  <li> Machine learning </li>
+  <li> Evaluation of models </li>
+  <li> Application development </li>
+  <li> Visualization </li>
+  <li> Testing </li>
+</ul>
 
 <h1> Modules developed </h1>
 
