@@ -427,7 +427,7 @@ def constructDistanceMatrixUrl(dataFrame, latitude, longitude):
         origin += str(row['latitude']) + ',' + str(row['longitude'])
     url += '&origins=' + origin
     url += '&destinations=' + str(latitude) + ',' + str(longitude)
-    url += '&key=AIzaSyCYnhazJCeczhD1PM0yt5mJc39093i5-5Q'
+    url += '&key=AIzaSyDPfqXnMS3gq-kGceSKgBs1rcoaqYYVJag'
     return url
 
 # function that clusters the nearest aibnbs.
