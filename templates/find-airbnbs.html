@@ -10,8 +10,7 @@
 {% endblock %}
 {% block body %}
 
-    <div id="leftMenuDiv" class="jumbotron"
-         style="float: left;width: 20%;margin-left: 20px;margin-right:10px;margin-top:20px;font-weight: bold;background-color: lightsteelblue">
+    <div id="leftMenuDiv" class="jumbotron left-menu-wrapper">
         <form action="/GenerateMarkers" method="post">
 
             <div class="form-group">
@@ -41,14 +40,13 @@
                 </select>
             </div>
 
-            <button style="margin-left: 50px;margin-top: 20px;background-color: chocolate;color: white;font-weight: bold;padding: 10px 30px;"
-                    type="submit" class="btn">Find Airbnbs
+            <button type="submit" class="btn submit-airbnb-button">Find Airbnbs
             </button>
         </form>
 
     </div>
 
-    <div id="mainContainer" style="margin-left: 370px;margin-top:20px;">
+    <div id="mainContainer" class="main-container">
         {{ response_map._repr_html_() | safe}}
     </div>
 
